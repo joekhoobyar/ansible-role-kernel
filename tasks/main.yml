@@ -14,7 +14,7 @@
       loop: "{{ kernel_config_defaults | dict2items }}"
     - name: update kconfig
       shell:
-        cmd: "yes '' | make silentoldconfig .config"
+        cmd: "yes '' | make olddefconfig .config"
         chdir: "{{ kernel_srcdir }}"
   rescue:
     - name: restore backed up config
@@ -22,3 +22,6 @@
         remote_src: yes
         src: "{{ kernel_srcdir }}/.config.ansible-backup"
         dest: "{{ kernel_srcdir }}/.config"
+    - name: fail due to prior errors
+      command: /bin/false
+
