@@ -1,0 +1,24 @@
+---
+- name: backup existing config
+  copy:
+    remote_src: yes
+    src: "{{ kernel_srcdir }}/.config"
+    dest: "{{ kernel_srcdir }}/.config.ansible-backup"
+- name: change kernel src config settings
+  block:
+    - name: write new config
+      lineinfile:
+        path: "{{ kernel_srcdir }}/.config"
+        line: "{{ item.key }}={{ item.value[0:1] }}"
+        regexp: "^(#\\s)?{{ item.key }}[= ]"
+      loop: "{{ kernel_config_defaults | dict2items }}"
+    - name: update kconfig
+      shell:
+        cmd: "yes '' | make silentoldconfig .config"
+        chdir: "{{ kernel_srcdir }}"
+  rescue:
+    - name: restore backed up config
+      copy:
+        remote_src: yes
+        src: "{{ kernel_srcdir }}/.config.ansible-backup"
+        dest: "{{ kernel_srcdir }}/.config"
