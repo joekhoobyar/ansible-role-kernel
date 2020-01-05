@@ -3,6 +3,7 @@ kernel_srcdir: /usr/src/linux
 
 # Default kernel configs
 kernel_config_defaults:
+  # Needed for base k8s installation
   CONFIG_CPUSETS: ym
   CONFIG_VETH: ym
   CONFIG_IP_NF_FILTER: ym
@@ -26,3 +27,17 @@ kernel_config_defaults:
   CONFIG_CGROUP_NET_PRIO: ym
   CONFIG_NF_NAT_IPV4: ym
   CONFIG_CFQ_GROUP_IOSCHED: ym
+  # Needed for libvirt and qemu
+  CONFIG_SCSI_ISCSI_ATTRS: m
+  CONFIG_BRIDGE_EBT_MARK_T: ym
+  CONFIG_BRIDGE_NF_EBTABLES: ym
+  CONFIG_NETFILTER_XT_TARGET_CHECKSUM: ym
+  CONFIG_IP_NF_MANGLE: ym
+  CONFIG_IP6_NF_MANGLE: ym
+  CONFIG_BRIDGE_EBT_T_NAT: ym
+  CONFIG_NET_ACT_POLICE: ym
+  CONFIG_NET_CLS_FW: ym
+  CONFIG_NET_CLS_U32: ym
+  CONFIG_NET_SCH_HTB: ym
+  CONFIG_NET_SCH_INGRESS: ym
+

@@ -1,0 +1,21 @@
+#
+# Build:
+#  - Get cpu count + 1
+# CC='gcc -march=native' make -j17
+#
+# Install modules:
+# make modules_install
+#
+# Install kernel:
+# mount /boot
+# make install
+#
+# Generate initramfs:
+# ...
+#
+# Configure grub
+# ...
+#
+# Optional reboot
+# ...
+#
