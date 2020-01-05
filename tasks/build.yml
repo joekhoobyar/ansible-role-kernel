@@ -11,10 +11,10 @@
 # make install
 #
 # Generate initramfs:
-# ...
+# genkernel --kernel-config=.config --disklabel --microcode --lvm --luks --gpg --firmware --install initramfs
 #
 # Configure grub
-# ...
+# grub-mkconfig -o /boot/grub/grub.cfg
 #
 # Optional reboot
 # ...
