@@ -1,0 +1,18 @@
+---
+# Initial ramdisk
+- name: genkernel compilation settings
+  lineinfile:
+    path: /etc/genkernel.conf
+    line: "{{ item.key }}=\"{{ item.value }}\""
+    regexp: "^(#\\s)?{{ item.key }}="
+  with_dict:
+    UTILS_CC: distcc gcc
+    UTILS_CXX: distcc g++
+  tags:
+    - kernel-initramfs
+- name: generate and install initial ramdisk
+  command:
+    cmd: genkernel --kernel-config=.config --disklabel --microcode --lvm --firmware --install initramfs
+    chdir: "{{ kernel_srcdir }}"
+  tags:
+    - kernel-initramfs

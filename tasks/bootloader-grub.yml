@@ -1,0 +1,7 @@
+---
+# Configure bootloader
+- name: generate grub configuration
+  command:
+    cmd: grub-mkconfig -o /boot/grub/grub.cfg
+  tags:
+    - kernel-bootloader

@@ -5,9 +5,21 @@
     - kernel-config
 - name: build the kernel
   import_tasks: build-vanilla.yml
-
-# OS specific installation tasks.
-- name: install the kernel
-  include_tasks: "install-{{ ansible_facts['os_family'] | lower }}.yml"
+- name: mount /boot
+  shell: mountpoint /boot || mount /boot
   tags:
     - kernel-install
+    - kernel-initramfs
+    - kernel-bootloader
+- name: install the kernel
+  import_tasks: install-vanilla.yml
+
+# OS specific installation tasks.
+- name: install an initramfs
+  include_tasks: "initramfs-{{ ansible_facts['os_family'] | lower }}.yml"
+  tags:
+    - kernel-initramfs
+- name: configure bootloader
+  include_tasks: bootloader-grub.yml
+  tags:
+    - kernel-bootloader
