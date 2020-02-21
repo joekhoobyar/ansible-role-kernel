@@ -1,27 +1,13 @@
 ---
-- name: backup existing config
-  copy:
-    remote_src: yes
-    src: "{{ kernel_srcdir }}/.config"
-    dest: "{{ kernel_srcdir }}/.config.ansible-backup"
-- name: change kernel src config settings
-  block:
-    - name: write new config
-      lineinfile:
-        path: "{{ kernel_srcdir }}/.config"
-        line: "{{ item.key }}={{ item.value[0:1] }}"
-        regexp: "^(#\\s)?{{ item.key }}[= ]"
-      loop: "{{ kernel_config_defaults | dict2items }}"
-    - name: update kconfig
-      shell:
-        cmd: "yes '' | make olddefconfig .config"
-        chdir: "{{ kernel_srcdir }}"
-  rescue:
-    - name: restore backed up config
-      copy:
-        remote_src: yes
-        src: "{{ kernel_srcdir }}/.config.ansible-backup"
-        dest: "{{ kernel_srcdir }}/.config"
-    - name: fail due to prior errors
-      command: /bin/false
+- name: configure the kernel
+  import_tasks: config-vanilla.yml
+  tags:
+    - kernel-config
+- name: build the kernel
+  import_tasks: build-vanilla.yml
 
+# OS specific installation tasks.
+- name: install the kernel
+  include_tasks: "install-{{ ansible_facts['os_family'] | lower }}.yml"
+  tags:
+    - kernel-install

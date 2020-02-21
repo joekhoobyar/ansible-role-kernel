@@ -1,15 +1,9 @@
-#
-# Build:
-#  - Get cpu count + 1
-# CC='gcc -march=native' make -j17
-#
-# Install modules:
-# make modules_install
-#
-# Install kernel:
-# mount /boot
-# make install
-#
+---
+- include_tasks: install-vanilla.yml
+  tags:
+    - kernel-install
+
+# Initial ramdisk
 # Generate initramfs:
 # genkernel --kernel-config=.config --disklabel --microcode --lvm --luks --gpg --firmware --install initramfs
 #

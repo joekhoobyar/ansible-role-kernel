@@ -1,0 +1,19 @@
+---
+# Install:
+- name: install kernel modules
+  command:
+    cmd: make modules_install
+    chdir: "{{ kernel_srcdir }}"
+  tags:
+    - kernel-install
+    - kernel-install-modules
+- name: mount /boot
+  shell: mountpoint /boot || mount /boot
+  tags:
+    - kernel-install
+- name: install kernel
+  command:
+    cmd: make install
+    chdir: "{{ kernel_srcdir }}"
+  tags:
+    - kernel-install

@@ -1,0 +1,14 @@
+- name: clean kernel
+  command:
+    cmd: make clean
+    chdir: "{{ kernel_srcdir }}"
+  tags:
+    - kernel-clean
+- name: build kernel
+  command:
+    cmd: make -j{{ ansible_processor_vcpus + 1 }}
+    chdir: "{{ kernel_srcdir }}"
+  environment:
+    CC: gcc -march=native
+  tags:
+    - kernel-build
