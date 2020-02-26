@@ -4,7 +4,7 @@
   lineinfile:
     path: /etc/genkernel.conf
     line: "{{ item.key }}=\"{{ item.value }}\""
-    regexp: "^(#\\s)?{{ item.key }}="
+    regexp: "^(#[\\s]*)?{{ item.key }}="
   with_dict:
     UTILS_CC: distcc gcc
     UTILS_CXX: distcc g++
