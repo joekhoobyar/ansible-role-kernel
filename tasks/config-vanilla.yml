@@ -9,7 +9,7 @@
     - name: write new config
       lineinfile:
         path: "{{ kernel_srcdir }}/.config"
-        line: "{{ item.key }}={{ item.value[0:1] }}"
+        line: "{{ item.key }}={{ item.value[0:1] if (item.value == 'ym' or item.value == 'my') else item.value }}"
         regexp: "^(#\\s)?{{ item.key }}[= ]"
       loop: "{{ kernel_config_defaults | dict2items }}"
     - name: update kconfig
