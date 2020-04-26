@@ -6,9 +6,7 @@
     - kernel-clean
 - name: build kernel
   command:
-    cmd: make -j{{ ansible_processor_vcpus + 1 }}
+    cmd: make -j{{ ansible_processor_vcpus + 1 }} CC='gcc -march=native'
     chdir: "{{ kernel_srcdir }}"
-  environment:
-    CC: gcc -march=native
   tags:
     - kernel-build
