@@ -6,8 +6,9 @@
     line: "{{ item.key }}=\"{{ item.value }}\""
     regexp: "^(#[\\s]*)?{{ item.key }}="
   with_dict:
-    UTILS_CC: distcc gcc
-    UTILS_CXX: distcc g++
+    UTILS_CC: "distcc gcc $(portageq envvar CFLAGS)"
+    UTILS_CXX: "distcc g++ $(portageq envvar CXXFLAGS)"
+    MAKEOPTS: "$(portageq envvar MAKEOPTS)"
   tags:
     - kernel-initramfs
 - name: generate and install initial ramdisk
