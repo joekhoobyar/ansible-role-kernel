@@ -6,7 +6,7 @@
     - kernel-clean
 - name: build kernel
   command:
-    cmd: "make $(portageq envvar MAKEOPTS) CC=\"distcc gcc $(portageq envvar CFLAGS)\""
+    cmd: "make \"$(portageq envvar MAKEOPTS)\" CC=\"distcc gcc $(portageq envvar CFLAGS)\""
     chdir: "{{ kernel_srcdir }}"
   tags:
     - kernel-build
