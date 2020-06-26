@@ -6,8 +6,6 @@ kernel_config_defaults:
   # Generally desired
   CONFIG_PACKET_DIAG: y
   CONFIG_UNIX_DIAG: y
-  CONFIG_INET_RAW_DIAG: ym
-  CONFIG_INET_UDP_DIAG: ym
   CONFIG_PSAMPLE: y
   CONFIG_LWTUNNEL: y
   CONFIG_NET_DEVLINK: y
