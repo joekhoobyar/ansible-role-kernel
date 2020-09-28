@@ -13,7 +13,7 @@
     - kernel-initramfs
 - name: generate and install initial ramdisk
   command:
-    cmd: genkernel --kerneldir=. --clear-cachedir --postclear --kernel-config=.config --disklabel --microcode --lvm --install initramfs
+    cmd: genkernel --kerneldir=. --clear-cachedir --postclear --kernel-config=.config --microcode --lvm --install initramfs
     chdir: "{{ kernel_srcdir }}"
   tags:
     - kernel-initramfs
