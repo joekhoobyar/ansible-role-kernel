@@ -6,9 +6,15 @@
     line: "{{ item.key }}=\"{{ item.value }}\""
     regexp: "^(#[\\s]*)?{{ item.key }}="
   with_dict:
-    UTILS_CC: "distcc gcc $(portageq envvar CFLAGS)"
-    UTILS_CXX: "distcc g++ $(portageq envvar CXXFLAGS)"
+    UTILS_CC: "gcc $(portageq envvar CFLAGS)"
+    UTILS_CXX: "g++ $(portageq envvar CXXFLAGS)"
     MAKEOPTS: "$(portageq envvar MAKEOPTS)"
+  tags:
+    - kernel-initramfs
+- name: mask broken genkernel
+  lineinfile:
+    path: /etc/portage/package.mask/base
+    line: "=sys-kernel/genkernel-4.2.3"
   tags:
     - kernel-initramfs
 - name: generate and install initial ramdisk
