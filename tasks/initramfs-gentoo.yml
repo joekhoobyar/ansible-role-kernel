@@ -1,22 +1,16 @@
 ---
 # Initial ramdisk
-- name: genkernel compilation settings
-  lineinfile:
-    path: /etc/genkernel.conf
-    line: "{{ item.key }}=\"{{ item.value }}\""
-    regexp: "^(#[\\s]*)?{{ item.key }}="
-  with_dict:
-    UTILS_CC: "gcc $(portageq envvar CFLAGS)"
-    UTILS_CXX: "g++ $(portageq envvar CXXFLAGS)"
-    MAKEOPTS: "$(portageq envvar MAKEOPTS)"
-  tags:
-    - kernel-initramfs
-- name: mask broken genkernel
-  lineinfile:
-    path: /etc/portage/package.mask/base
-    line: "=sys-kernel/genkernel-4.2.3"
-  tags:
-    - kernel-initramfs
+# - name: genkernel compilation settings
+#   lineinfile:
+#     path: /etc/genkernel.conf
+#     line: "{{ item.key }}=\"{{ item.value }}\""
+#     regexp: "^(#[\\s]*)?{{ item.key }}="
+#   with_dict:
+#     UTILS_CC: "gcc $(portageq envvar CFLAGS)"
+#     UTILS_CXX: "g++ $(portageq envvar CXXFLAGS)"
+#     MAKEOPTS: "$(portageq envvar MAKEOPTS)"
+#   tags:
+#     - kernel-initramfs
 - name: generate and install initial ramdisk
   command:
     cmd: genkernel --kerneldir=. --clear-cachedir --postclear --kernel-config=.config --microcode --lvm --install initramfs
