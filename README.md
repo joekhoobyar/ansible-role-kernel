@@ -1,3 +1,19 @@
+## Protect TODO
+
+emerge --noreplace
+
+## Cleanup TODO
+
+Find versions that are:
+ - not the three latest kernels
+ - not the current kernel
+ - not the default boot kernel
+
+emerge --unmerge
+/boot
+/usr/src/linux
+/lib/modules
+
 ## Required kernel modules
 
  *   CONFIG_CPUSETS:	 is not set when it should be.
