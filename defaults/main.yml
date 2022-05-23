@@ -16,6 +16,8 @@ kernel_config_defaults:
   CONFIG_IP_SET_HASH_NET: ym
   CONFIG_NF_CONNTRACK_SNMP: ym
   CONFIG_CHECKPOINT_RESTORE: y
+  # Needed for docker performance
+  CONFIG_OVERLAY_FS_REDIRECT_DIR: y
   # Needed for base k8s installation
   CONFIG_CPUSETS: ym
   CONFIG_VETH: ym
