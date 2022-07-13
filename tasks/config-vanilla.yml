@@ -1,4 +1,8 @@
 ---
+- name: generate a missing config
+  shell: "zcat /proc/config.gz >{{ kernel_srcdir }}/.config"
+  args:
+    creates: "{{ kernel_srcdir }}/.config"
 - name: backup existing config
   copy:
     remote_src: yes
