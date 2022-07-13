@@ -6,6 +6,8 @@
     mode: 0755
     owner: root
     group: root
+  tags:
+    - kernel-tool
 - name: configure the kernel
   import_tasks: config-vanilla.yml
   tags:

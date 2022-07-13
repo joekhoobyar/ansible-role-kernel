@@ -13,8 +13,13 @@ help() {
 
   $name list
   $name show
+  $name latest
   $name purge {kernel}
 "
+}
+
+latest-kernel() {
+	kerneltool list | sort -u | tail -1
 }
 
 show-kernel() {
