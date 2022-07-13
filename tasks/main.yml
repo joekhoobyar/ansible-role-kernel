@@ -1,4 +1,5 @@
 ---
+# tools
 - name: install kerneltool
   copy:
     src: kerneltool.sh
@@ -8,6 +9,26 @@
     group: root
   tags:
     - kernel-tool
+
+# kernel selection
+- name: find the latest kernel
+  shell: kerneltool latest
+  register: kernel_latest
+  when: kernel_version == 'latest'
+  tags:
+    - kernel-select
+- name: select the latest kernel
+  set_fact:
+    kernel_version: "{{ kernel_latest.stdout | trim }}"
+  when: kernel_version == 'latest'
+  tags:
+    - kernel-select
+- name: link the kernel
+  shell: "kerneltool link {{ kernel_version }}"
+  tags:
+    - kernel-select
+
+# configure, build and install
 - name: configure the kernel
   import_tasks: config-vanilla.yml
   tags:
@@ -23,7 +44,7 @@
 - name: install the kernel
   import_tasks: install-vanilla.yml
 
-# OS specific installation tasks.
+# initramfs and bootloader
 - name: install an initramfs
   include_tasks: "initramfs-{{ ansible_facts['os_family'] | lower }}.yml"
   tags:

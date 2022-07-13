@@ -1,3 +1,6 @@
+# Kernel selection
+kernel_version: latest
+
 # Kernel installation
 kernel_srcdir: /usr/src/linux
 
