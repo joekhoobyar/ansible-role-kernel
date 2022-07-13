@@ -1,4 +1,11 @@
 ---
+- name: install kerneltool
+  copy:
+    src: kerneltool.sh
+    dest: /usr/local/sbin/kerneltool
+    mode: 0755
+    owner: root
+    group: root
 - name: configure the kernel
   import_tasks: config-vanilla.yml
   tags:
