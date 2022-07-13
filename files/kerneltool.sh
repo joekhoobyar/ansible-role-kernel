@@ -14,8 +14,13 @@ help() {
   $name list
   $name show
   $name latest
+  $name link {kernel}
   $name purge {kernel}
 "
+}
+
+link-kernel() {
+	kernel-config set "$1"
 }
 
 latest-kernel() {
@@ -90,7 +95,9 @@ purge-kernel() {
 cmd="${1:-}" ; shift || true
 case "$cmd" in
 show) show-kernel ;;
+latest) latest-kernel ;;
 list) list-kernels ;;
+link) link-kernel "$1" ;;
 purge)
 	[ $# -eq 1 ] || help
 	purge-kernel "$1"
