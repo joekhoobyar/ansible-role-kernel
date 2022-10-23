@@ -1,0 +1,4 @@
+- name: install kernel headers
+  apt:
+    name: "linux-headers-current-{{ armbian.linux_family }}"
+    state: latest

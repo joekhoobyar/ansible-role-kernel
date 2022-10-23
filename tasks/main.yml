@@ -1,55 +1,10 @@
 ---
-# tools
-- name: install kerneltool
-  copy:
-    src: kerneltool.sh
-    dest: /usr/local/sbin/kerneltool
-    mode: 0755
-    owner: root
-    group: root
-  tags:
-    - kernel-tool
+# Most OS
+- include_tasks: "main-{{ ansible_os_family | lower }}.yml"
+  when: armbian is not defined
+  tags: always
 
-# kernel selection
-- name: find the latest kernel
-  shell: kerneltool latest
-  register: kernel_latest
-  when: kernel_version == 'latest'
-  tags:
-    - kernel-select
-- name: select the latest kernel
-  set_fact:
-    kernel_version: "{{ kernel_latest.stdout | trim }}"
-  when: kernel_version == 'latest'
-  tags:
-    - kernel-select
-- name: link the kernel
-  shell: "kerneltool link {{ kernel_version }}"
-  tags:
-    - kernel-select
-
-# configure, build and install
-- name: configure the kernel
-  import_tasks: config-vanilla.yml
-  tags:
-    - kernel-config
-- name: build the kernel
-  import_tasks: build-vanilla.yml
-- name: mount /boot
-  shell: mountpoint /boot || mount /boot
-  tags:
-    - kernel-install
-    - kernel-initramfs
-    - kernel-bootloader
-- name: install the kernel
-  import_tasks: install-vanilla.yml
-
-# initramfs and bootloader
-- name: install an initramfs
-  include_tasks: "initramfs-{{ ansible_facts['os_family'] | lower }}.yml"
-  tags:
-    - kernel-initramfs
-- name: configure bootloader
-  include_tasks: bootloader-grub.yml
-  tags:
-    - kernel-bootloader
+# Armbian 
+- include_tasks: main-armbian.yml
+  when: (armbian is defined) and (armbian.board | default('none') != 'none')
+  tags: always
