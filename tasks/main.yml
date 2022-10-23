@@ -1,10 +1,10 @@
 ---
 # Most OS
 - include_tasks: "main-{{ ansible_os_family | lower }}.yml"
-  when: armbian is not defined
+  when: (armbian is not defined) or (armbian.board is not defined)
   tags: always
 
 # Armbian 
 - include_tasks: main-armbian.yml
-  when: (armbian is defined) and (armbian.board | default('none') != 'none')
+  when: (armbian is defined) and (armbian.board is defined)
   tags: always

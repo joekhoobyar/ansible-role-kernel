@@ -1,3 +1,10 @@
+# Arch detection
+# debian_arch: amd64
+debian_arch_map:
+  x86_64: amd64
+  armv7l: armhf
+  aarch64: arm64
+
 # Kernel selection
 kernel_version: latest
 
