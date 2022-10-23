@@ -1,9 +1,13 @@
-# Arch detection
+# Debian Arch detection
 # debian_arch: amd64
 debian_arch_map:
   x86_64: amd64
   armv7l: armhf
   aarch64: arm64
+
+# Armbian kernel options
+armbian_env_usbstoragequirks: []
+armbian_env_extra: {}
 
 # Kernel selection
 kernel_version: latest

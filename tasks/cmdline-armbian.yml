@@ -1,0 +1,31 @@
+# Parse armbian env file
+- name: read armbian env
+  shell: cat /boot/armbianEnv.txt
+  register: armbian_env_stdout
+  changed_when: no
+- name: parse armbian env
+  set_fact:
+    _armbian_env: "{{ dict(armbian_env_stdout.stdout_lines | map('split','=', 1)) }}"
+- name: parse armbian env usbstoragequirks
+  set_fact:
+    _armbian_usbstoragequirks: "{{ (_armbian_env.usbstoragequirks is defined) | ternary(_armbian_env.usbstoragequirks | split(','), []) }}"
+
+# Update USB storage quirks
+- name: update armbian env usbstoragequirks
+  set_fact:
+    _new_armbian_env: "{{ _armbian_env | combine({'usbstoragequirks': (_armbian_usbstoragequirks | default([]) | union(armbian_env_usbstoragequirks) | unique | join(','))}) }}"
+  when: armbian_env_usbstoragequirks | length > 0
+
+# Update other armbian env
+- name: update other armbian env settings
+  set_fact:
+    _new_armbian_env: "{{ _new_armbian_env | combine(armbian_env_extra) }}"
+  when: armbian_env_extra | length > 0
+
+# Write back armbianEnv.txt
+- name: write armbian env
+  copy:
+    dest: /boot/armbianEnv.txt
+    content: "{{ (_new_armbian_env.keys() | zip(_new_armbian_env.values()) | map('join', '=') | join('\n')) ~ '\n' }}"
+    backup: yes
+  when: _new_armbian_env is defined
