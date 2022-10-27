@@ -33,7 +33,10 @@
   tags:
     - kernel-config
 - name: build the kernel
-  import_tasks: build-vanilla.yml
+  include_tasks: build-vanilla.yml
+  tags:
+    - kernel-clean
+    - kernel-build
 - name: mount /boot
   shell: mountpoint /boot || mount /boot
   tags:
@@ -41,7 +44,10 @@
     - kernel-initramfs
     - kernel-bootloader
 - name: install the kernel
-  import_tasks: install-vanilla.yml
+  include_tasks: install-vanilla.yml
+  tags:
+    - kernel-install
+    - kernel-install-modules
 
 # initramfs and bootloader
 - name: install an initramfs
