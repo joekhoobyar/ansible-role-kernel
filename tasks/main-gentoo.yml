@@ -29,7 +29,7 @@
 
 # configure, build and install
 - name: configure the kernel
-  import_tasks: config-vanilla.yml
+  include_tasks: config-vanilla.yml
   tags:
     - kernel-config
 - name: build the kernel
