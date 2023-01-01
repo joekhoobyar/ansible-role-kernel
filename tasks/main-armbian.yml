@@ -2,6 +2,7 @@
   apt:
     name: "linux-headers-current-{{ armbian.linux_family }}"
     state: latest
+  when: not skip_kernel_update
 
 - name: update kernel cmdline
   import_tasks: cmdline-armbian.yml

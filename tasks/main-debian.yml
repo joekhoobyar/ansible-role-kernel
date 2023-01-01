@@ -2,3 +2,4 @@
   apt:
     name: "linux-headers-{{ debian_arch | default(debian_arch_map[ansible_architecture] | default(ansible_architecture)) }}"
     state: latest
+  when: not skip_kernel_update
