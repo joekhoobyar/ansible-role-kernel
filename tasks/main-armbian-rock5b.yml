@@ -1,13 +1,22 @@
-# configure kernel headers
+# prepare kernel headers
+- name: remove cross-compilation artifacts
+  shell: |
+    find scripts -type f \( -perm /111 -o -name '*.o' \) -exec sh -c 'if file -b {} | egrep -q "^ELF.*x86-64"; then rm {}; fi' \;
+  args:
+    chdir: "/usr/src/linux-headers-{{ ansible_kernel }}"
+  changed_when: no
+  tags:
+  - kernel-prepare
 - name: create kernel headers config
   shell: "zcat /proc/config.gz >/usr/src/linux-headers-{{ ansible_kernel }}/.config"
+  changed_when: no
   tags:
   - kernel-prepare
 
 # install kernel source
 - name: install kernel source
   apt:
-    name: "linux-{{ armbian.branch }}-{{ armbian.linux_family }}"
+    name: "linux-source-{{ vanilla_kernel_version }}-{{ armbian.branch }}-{{ armbian.linux_family }}"
     state: latest
   tags:
   - kernel-prepare
@@ -25,12 +34,14 @@
     find scripts -type f \( -perm /111 -o -name '*.o' \) -exec sh -c 'if file -b {} | egrep -q "^ELF.*x86-64"; then rm {}; fi' \;
   args:
     chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  changed_when: no
   tags:
   - kernel-prepare
 - name: create kernel source config
   shell: "zcat /proc/config.gz >.config"
   args:
     chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  changed_when: no
   tags:
   - kernel-prepare
 - name: prepare kernel source config
