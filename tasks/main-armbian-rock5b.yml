@@ -1,0 +1,29 @@
+# configure kernel headers
+- name: create kernel headers config
+  shell: "zcat /proc/config.gz >/usr/src/linux-headers-{{ ansible_kernel }}/.config"
+  tags:
+  - kernel-prepare
+
+# prepare kernel headers
+- name: prepare kernel header config
+  shell: "yes | make oldconfig"
+  args:
+    chdir: "/usr/src/linux-headers-{{ ansible_kernel }}"
+  tags:
+  - kernel-prepare
+- name: upload kernel header script
+  copy:
+    src: rock5b-build-scripts.sh
+    dest: /usr/src/build-kernel-scripts.sh
+    mode: 0755
+    owner: root
+    group: root
+  tags:
+  - kernel-prepare
+- name: prepare kernel header scripts
+  shell: "/usr/src/build-kernel-scripts.sh"
+  args:
+    chdir: "/usr/src/linux-headers-{{ ansible_kernel }}"
+    creates: "/usr/src/linux-{{ ansible_kernel }}/scripts/mod/modpost"
+  tags:
+  - kernel-prepare

@@ -1,8 +1,12 @@
 - name: install kernel headers
   apt:
-    name: "linux-headers-current-{{ armbian.linux_family }}"
+    name: "linux-headers-{{ armbian.branch }}-{{ armbian.linux_family }}"
     state: latest
   when: not skip_kernel_update
+
+- include_tasks: main-armbian-rock5b.yml
+  when: (ansible_facts.armbian.board | default('none')) == 'rock-5b'
+  tags: always
 
 - name: update kernel cmdline
   import_tasks: cmdline-armbian.yml
