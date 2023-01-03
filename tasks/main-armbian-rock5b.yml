@@ -4,26 +4,44 @@
   tags:
   - kernel-prepare
 
-# prepare kernel headers
-- name: prepare kernel header config
-  shell: "yes | make oldconfig"
-  args:
-    chdir: "/usr/src/linux-headers-{{ ansible_kernel }}"
+# install kernel source
+- name: install kernel source
+  apt:
+    name: "linux-{{ armbian.branch }}-{{ armbian.linux_family }}"
+    state: latest
   tags:
   - kernel-prepare
-- name: upload kernel header script
-  copy:
-    src: rock5b-build-scripts.sh
-    dest: /usr/src/build-kernel-scripts.sh
-    mode: 0755
-    owner: root
-    group: root
+- name: unpack kernel source
+  shell: "mkdir -p linux-{{ ansible_kernel }} && tar -C linux-{{ ansible_kernel }} -xJf linux-source-{{ ansible_kernel }}.tar.xz"
+  args:
+    chdir: "/usr/src"
+    creates: "/usr/src/linux-{{ ansible_kernel }}/include/linux"
   tags:
   - kernel-prepare
-- name: prepare kernel header scripts
-  shell: "/usr/src/build-kernel-scripts.sh"
+
+# prepare kernel source
+- name: remove cross-compilation artifacts
+  shell: |
+    find scripts -type f \( -perm /111 -o -name '*.o' \) -exec sh -c 'if file -b {} | egrep -q "^ELF.*x86-64"; then rm {}; fi' \;
   args:
-    chdir: "/usr/src/linux-headers-{{ ansible_kernel }}"
-    creates: "/usr/src/linux-{{ ansible_kernel }}/scripts/mod/modpost"
+    chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  tags:
+  - kernel-prepare
+- name: create kernel source config
+  shell: "zcat /proc/config.gz >.config"
+  args:
+    chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  tags:
+  - kernel-prepare
+- name: prepare kernel source config
+  shell: "yes | make oldconfig ; make prepare modules_prepare"
+  args:
+    chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  tags:
+  - kernel-prepare
+- name: prepare kernel source Module.symvers
+  shell: "cp /usr/src/linux-headers-{{ ansible_kernel }}/Module.symvers ."
+  args:
+    chdir: "/usr/src/linux-{{ ansible_kernel }}"
   tags:
   - kernel-prepare
