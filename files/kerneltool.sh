@@ -20,7 +20,28 @@ help() {
 }
 
 link-kernel() {
-	kernel-config set "$1"
+	local kernel="$1" ; shift
+
+	# Select the kernel
+	kernel-config set "$kernel"
+	kernel="$(show-kernel)"
+
+	local last="${kernel##*-}"
+
+	# Get the revision suffix - might be empty
+	local rev="-r${last##r}"
+	[ "$rev" = "-r$last" ] && rev=''
+
+	# Get the rest without the revision
+	local rest="${kernel}"
+	[ -n "$rev" ] && rest="${kernel%-*}"
+
+	# Get the name suffix and the plain version
+	local suffix="${rest##*-}"
+	local version="${rest%-*}"
+
+	# Add the kernel to the world file
+	logged emerge --noreplace "=sys-kernel/${suffix}-sources-${version}${rev}" || true
 }
 
 latest-kernel() {
