@@ -39,6 +39,7 @@
   - kernel-prepare
 - name: remove python2 references
   shell: |
+    sed -e 's@python2@python@g' -i Makefile
     find scripts -exec sh -c 'if grep python2 {}; then sed -e 's@python2@python@g' -i {}; fi' \;
   args:
     chdir: "/usr/src/linux-{{ ansible_kernel }}"
