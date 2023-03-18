@@ -25,7 +25,7 @@
 # install kernel source
 - name: install kernel source
   apt:
-    name: "linux-source-{{ vanilla_kernel_version }}-{{ armbian.branch }}-{{ armbian.linux_family }}"
+    name: "linux-source-{{ vanilla_kernel_version }}-{{ armbian.branch | default('legacy') }}-{{ armbian.linux_family }}"
     state: latest
   tags:
   - kernel-prepare
