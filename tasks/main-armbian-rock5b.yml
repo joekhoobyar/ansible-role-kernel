@@ -7,6 +7,15 @@
   changed_when: no
   tags:
   - kernel-prepare
+- name: remove python2 references
+  shell: |
+    sed -e 's@python2@python@g' -i Makefile
+    find scripts -type f -exec sh -c 'if grep python2 {}; then sed -e 's@python2@python@g' -i {}; fi' \;
+  args:
+    chdir: "/usr/src/linux-headers-{{ ansible_kernel }}"
+  changed_when: no
+  tags:
+  - kernel-prepare
 - name: create kernel headers config
   shell: "zcat /proc/config.gz >/usr/src/linux-headers-{{ ansible_kernel }}/.config"
   changed_when: no
@@ -40,7 +49,7 @@
 - name: remove python2 references
   shell: |
     sed -e 's@python2@python@g' -i Makefile
-    find scripts -exec sh -c 'if grep python2 {}; then sed -e 's@python2@python@g' -i {}; fi' \;
+    find scripts -type f -exec sh -c 'if grep python2 {}; then sed -e 's@python2@python@g' -i {}; fi' \;
   args:
     chdir: "/usr/src/linux-{{ ansible_kernel }}"
   changed_when: no
