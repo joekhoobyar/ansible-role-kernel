@@ -37,6 +37,14 @@
   changed_when: no
   tags:
   - kernel-prepare
+- name: remove python2 references
+  shell: |
+    find scripts -exec sh -c 'if grep python2 {}; then sed -e 's@python2@python@g' -i {}; fi' \;
+  args:
+    chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  changed_when: no
+  tags:
+  - kernel-prepare
 - name: create kernel source config
   shell: "zcat /proc/config.gz >.config"
   args:
