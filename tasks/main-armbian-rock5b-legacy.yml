@@ -1,10 +1,14 @@
 # prepare kernel headers
+#
+# (older versions have some garbage)
+#
 - name: remove cross-compilation artifacts
   shell: |
     find scripts -type f \( -perm /111 -o -name '*.o' \) -exec sh -c 'if file -b {} | egrep -q "^ELF.*x86-64"; then rm {}; fi' \;
   args:
     chdir: "/usr/src/linux-headers-{{ ansible_kernel }}"
   changed_when: no
+  when: ansible_kernel != "5.10.160-legacy-rk35xx"
   tags:
   - kernel-prepare
 - name: remove python2 references
@@ -14,6 +18,7 @@
   args:
     chdir: "/usr/src/linux-headers-{{ ansible_kernel }}"
   changed_when: no
+  when: ansible_kernel != "5.10.160-legacy-rk35xx"
   tags:
   - kernel-prepare
 - name: create kernel headers config
@@ -23,17 +28,35 @@
   - kernel-prepare
 
 # install kernel source
-- name: install kernel source
+- name: install kernel source from apt
   apt:
     name: "linux-source-{{ vanilla_kernel_version }}-{{ armbian.branch | default('legacy') }}-{{ armbian.linux_family }}"
     state: latest
+  when: ansible_kernel != "5.10.160-legacy-rk35xx"
   tags:
   - kernel-prepare
-- name: unpack kernel source
+- name: unpack kernel source from apt
   shell: "mkdir -p linux-{{ ansible_kernel }} && tar -C linux-{{ ansible_kernel }} -xJf linux-source-{{ ansible_kernel }}.tar.xz"
   args:
     chdir: "/usr/src"
     creates: "/usr/src/linux-{{ ansible_kernel }}/include/linux"
+  when: ansible_kernel != "5.10.160-legacy-rk35xx"
+  tags:
+  - kernel-prepare
+- name: install kernel source from git
+  git:
+    repo: https://github.com/armbian/linux-rockchip.git
+    dest: /usr/src/linux-rockchip
+    version: rk-5.10-rkr6
+  when: ansible_kernel == "5.10.160-legacy-rk35xx"
+  tags:
+  - kernel-prepare
+- name: symlink kernel source from git
+  file:
+    src: linux-rockchip
+    dest: /usr/src/linux-{{ ansible_kernel }}
+    state: link
+  when: ansible_kernel == "5.10.160-legacy-rk35xx"
   tags:
   - kernel-prepare
 
@@ -44,6 +67,7 @@
   args:
     chdir: "/usr/src/linux-{{ ansible_kernel }}"
   changed_when: no
+  when: ansible_kernel != "5.10.160-legacy-rk35xx"
   tags:
   - kernel-prepare
 - name: remove python2 references
@@ -53,6 +77,7 @@
   args:
     chdir: "/usr/src/linux-{{ ansible_kernel }}"
   changed_when: no
+  when: ansible_kernel != "5.10.160-legacy-rk35xx"
   tags:
   - kernel-prepare
 - name: create kernel source config
