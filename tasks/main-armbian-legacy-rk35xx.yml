@@ -30,7 +30,7 @@
   tags:
   - kernel-prepare
 - name: prepare kernel source config
-  shell: "yes | make oldconfig ; make prepare modules_prepare"
+  shell: "make olddefconfig && make prepare modules_prepare"
   args:
     chdir: "/usr/src/linux-{{ ansible_kernel }}"
   tags:
