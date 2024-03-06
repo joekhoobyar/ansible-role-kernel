@@ -1,41 +1,35 @@
-## Protect TODO
+# ansible-role-kernel
 
-emerge --noreplace
+## Overview
 
-## Cleanup TODO
+Performs Linux kernel related tasks on different operating systems.
 
-Find versions that are:
- - not the three latest kernels
- - not the current kernel
- - not the default boot kernel
+### Debian
 
-emerge --unmerge
-/boot
-/usr/src/linux
-/lib/modules
+- Installs Linux kernel headers, so that out-of-tree modules can be built
 
-## Required kernel modules
+### Armbian
 
- *   CONFIG_CPUSETS:	 is not set when it should be.
- *   CONFIG_VETH:	 is not set when it should be.
- *   CONFIG_IP_NF_FILTER:	 is not set when it should be.
- *   CONFIG_IP_NF_TARGET_MASQUERADE:	 is not set when it should be.
- *   CONFIG_NETFILTER_XT_MATCH_ADDRTYPE:	 is not set when it should be.
- *   CONFIG_NETFILTER_XT_MATCH_CONNTRACK:	 is not set when it should be.
- *   CONFIG_NETFILTER_XT_MATCH_IPVS:	 is not set when it should be.
- *   CONFIG_IP_NF_NAT:	 is not set when it should be.
- *   CONFIG_NF_NAT:	 is not set when it should be.
- *   CONFIG_NF_NAT_NEEDED:	 is not set when it should be.
- *   CONFIG_CGROUP_PERF: is optional for container statistics gathering
- *   CONFIG_CGROUP_HUGETLB:	 is not set when it should be.
- *   CONFIG_NET_CLS_CGROUP:	 is not set when it should be.
- *   CONFIG_IP_VS:	 is not set when it should be.
- *   CONFIG_IP_VS_PROTO_TCP:	 is not set when it should be.
- *   CONFIG_IP_VS_PROTO_UDP:	 is not set when it should be.
- *   CONFIG_IP_VS_NFCT:	 is not set when it should be.
- *   CONFIG_IP_VS_RR:	 is not set when it should be.
- *   CONFIG_IPVLAN:	 is not set when it should be.
- *   CONFIG_DUMMY:	 is not set when it should be.
- *   CONFIG_CGROUP_NET_PRIO:	 is not set when it should be.
- *   CONFIG_NF_NAT_IPV4:	 is not set when it should be.
- *   CONFIG_CFQ_GROUP_IOSCHED:	 is not set when it should be.
+- Installs Linux kernel headers and kernel source, so that out-of-tree modules can be built
+
+### Gentoo
+
+- Installs a `kerneltool` script for managing Linux kernels on Gentoo
+- Selects and symlinks the latest `sys-kernel/gentoo-sources` Linux kernel.
+- Configures, buidls and installs the Linux kernel
+- Builds and installs the initramfs
+- Generates grub configuration
+
+## kerneltool
+
+This tool is installed on gentoo to aid in Linux kernel related operations.
+
+```
+kerneltool: usage: 
+
+  kerneltool list
+  kerneltool show
+  kerneltool latest
+  kerneltool link {kernel}
+  kerneltool purge {kernel}
+```
