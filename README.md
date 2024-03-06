@@ -12,6 +12,17 @@ Performs Linux kernel related tasks on different operating systems.
 
 - Installs Linux kernel headers and kernel source, so that out-of-tree modules can be built
 
+NOTE: Armbian targets require the following `ansible.cfg` settings:
+
+```[ini]
+[defaults]
+facts_modules = smart, samdoran.armbian.armbian_facts
+```
+
+See:
+
+- [https://github.com/samdoran/ansible-collection-armbian/tree/main](ansible-collection-armbian)
+
 ### Gentoo
 
 - Installs a `kerneltool` script for managing Linux kernels on Gentoo
@@ -24,7 +35,7 @@ Performs Linux kernel related tasks on different operating systems.
 
 This tool is installed on gentoo to aid in Linux kernel related operations.
 
-```
+```[text]
 kerneltool: usage: 
 
   kerneltool list
