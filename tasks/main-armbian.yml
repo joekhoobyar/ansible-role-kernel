@@ -2,10 +2,9 @@
   apt:
     name: "linux-headers-{{ armbian.branch }}-{{ armbian.linux_family }}"
     state: latest
-  when: not skip_kernel_update
 
-- include_tasks: main-armbian-rock5b-legacy.yml
-  when: (ansible_facts.armbian.board | default('none')) == 'rock-5b' and ansible_facts.armbian.branch == 'legacy'
+- include_tasks: main-armbian-legacy-rk35xx.yml
+  when: (ansible_facts.armbian.linux_family | default('none')) == 'rk35xx' and ansible_facts.armbian.branch == 'legacy'
   tags: always
 
 - name: update kernel cmdline

@@ -1,0 +1,43 @@
+# prepare kernel headers
+- name: create kernel headers config
+  shell: "zcat /proc/config.gz >/usr/src/linux-headers-{{ ansible_kernel }}/.config"
+  changed_when: no
+  tags:
+  - kernel-prepare
+
+# install kernel source
+- name: install kernel source from git
+  git:
+    repo: https://github.com/armbian/linux-rockchip.git
+    dest: /usr/src/linux-rockchip
+    version: rk-5.10-rkr6
+  tags:
+  - kernel-prepare
+- name: symlink kernel source from git
+  file:
+    src: linux-rockchip
+    dest: /usr/src/linux-{{ ansible_kernel }}
+    state: link
+  tags:
+  - kernel-prepare
+
+# prepare kernel source
+- name: create kernel source config
+  shell: "zcat /proc/config.gz >.config"
+  args:
+    chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  changed_when: no
+  tags:
+  - kernel-prepare
+- name: prepare kernel source config
+  shell: "yes | make oldconfig ; make prepare modules_prepare"
+  args:
+    chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  tags:
+  - kernel-prepare
+- name: prepare kernel source Module.symvers
+  shell: "cp /usr/src/linux-headers-{{ ansible_kernel }}/Module.symvers ."
+  args:
+    chdir: "/usr/src/linux-{{ ansible_kernel }}"
+  tags:
+  - kernel-prepare
