@@ -33,3 +33,7 @@ kerneltool: usage:
   kerneltool link {kernel}
   kerneltool purge {kernel}
 ```
+
+## License
+
+ansible-role-kernel is MIT-Licensed
